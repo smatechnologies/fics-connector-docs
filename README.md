@@ -12,7 +12,7 @@ SMA Technologies assumes no liability for damage caused by the usage of any of t
 
 Copyright 2021 SMA Technologies
 
-This SMA OpCon Template Repo documentation is [Creative Commons licensed](LICENSE).
+This SMA OpCon FICS Connector documentation is [Creative Commons licensed](LICENSE).
 
 ## Contribution
 
