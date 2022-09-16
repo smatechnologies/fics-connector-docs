@@ -1,6 +1,6 @@
 # SMA OpCon FICS Connector Docs
 
-This repository contains the content behind the SMA OpCon MCP Agent documentation hosted at <https://help.smatechnologies.com/opcon/connectors/fics>.
+This repository contains the content behind the SMA OpCon FICS Connector documentation hosted at <https://help.smatechnologies.com/opcon/connectors/fics>.
 
 ## Disclaimer
 
