@@ -17,19 +17,19 @@ If a required data structure cannot be built by the available functions, the req
 
 When a template file is first opened, it appears similar to the following:
 
-![img alt](/img/smaficstemplate1.png)
+![img alt](../static/img/smaficstemplate1.png)
 
 At this point, the user can read an existing request file either by clicking the **Read File** button or by clicking the **Fetch Method Definitions** button to load the available definitions (from the web service) and then select one of the functions by clicking the **Select Method Template** button.
 
 **IF** the user clicks on the **Fetch Method Definitions** button, a wait cursor appears and then all of the buttons become enabled. If the user then clicks the **Select Method Template** button, a screen similar to the one below is displayed.
 
-![img alt](/img/smaficstemplate2.png)
+![img alt](../static/img/smaficstemplate2.png)
 
 This represents a list sorted by Folder, then Sub-Folder, and then Method Name. Since some of the Program Names are duplicated, e.g., ```Reprint Investors (s)```, the actual Method Name is shown in brackets to help identify the desired functionality.
 
 Click one of the Program Name lines to load its definition in the edit window. As an example, if the user selects ```Create ACH File [CreateACHFile]```, the request information would appear as:
 
-![img alt](/img/smaficstemplate3.png)
+![img alt](../static/img/smaficstemplate3.png)
 
 The selected method is displayed as the first line (```Payments -> Automated -> Create ACH File [CreateACHFile]```). Different types of data are displayed. There are simple items (like ```IncludeLoansWithStops``` or ```Object Item 1```) and groups (like ```Array Value #0```) that contain a col- lection of items.
 
@@ -42,7 +42,7 @@ Lastly, there are containers (like ```DatesToConvert```) that contain multiple o
 
 At any time, the user can click the **Show Generated JSON** button to see what the request file will look like when saved. Before making any changes, the **Show Generated JSON** button shows:
 
-![img alt](/img/smaficstemplate4.png)
+![img alt](../static/img/smaficstemplate4.png)
 
 :::info Note
 
@@ -52,7 +52,7 @@ There may be *comment* lones at the bottom of the ifle that are used by the tool
 * ```CorrespondentBank```
 :::
 
-![img alt](/img/smaficstemplate5.png)
+![img alt](../static/img/smaficstemplate5.png)
 
 ### Right Click Options
 
@@ -73,7 +73,7 @@ If the user right-clicks on a group line, a pop-up menu will be displayed offeri
 ```Duplicate Group``` will create a new group containing copies of all of the descendants of the selected group.
 ```Insert New Item``` will display the new Item entry screen:
 
-![img alt](/img/smaficstemplate6.png)
+![img alt](../static/img/smaficstemplate6.png)
 
 :::info Note
 OpCon Global Properties can be used **ONLY** for datatype setrings and dates. SMAFICSConnector performs the substitution before sending it to the web service.
@@ -92,17 +92,17 @@ If the user right-clicks on an Item line, a pop-up menu is displayed offering th
 ```Delete Item``` operates as expected; the item is be removed from the request definition. 
 ```Duplicate Item``` creates a similarly named item (```- COPY``` is appended to the item name) immediately below the selected item. In the following screenshot, the user right-clicked ```CreatePrenoteOnlyFile``` and selected ```Duplicate Item```.
 
-![img alt](/img/smaficstemplate7.png)
+![img alt](../static/img/smaficstemplate7.png)
 
 Selecting ```Edit Item``` opens an editing window. The user can rename the newly created duplicate of ```CreatePrenoteOnlyFile``` or change the value.
 
-![img alt](/img/smaficstemplate8.png)
+![img alt](../static/img/smaficstemplate8.png)
 
 The original datatype is preserved.
 
 To create a new item (with a different datatype), select ```Insert Item```. The following edit window displays:
 
-![img alt](/img/smaficstemplate8.png)
+![img alt](../static/img/smaficstemplate8.png)
 
 :::info Note
 
