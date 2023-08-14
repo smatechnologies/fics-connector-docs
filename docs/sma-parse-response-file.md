@@ -1,8 +1,8 @@
 ---
-sidebar_label: 'SMAParseResponceFile'
+sidebar_label: 'SMAParseResponseFile'
 ---
 
-# SMA Parse Responce File
+# SMA Parse Response File
 
 ## Overview
 
@@ -10,11 +10,11 @@ There are occasions when tag values need to be pulled and saved for downstream p
 
 :::tip Example
 
-SMAParseReponseFile.exe -ReponseFile=.\MyResponce.txt -CaptureTag="DataSource" -PropertyName="DataSourceArray"
+SMAParseReponseFile.exe -ReponseFile=.\MyResponse.txt -CaptureTag="DataSource" -PropertyName="DataSourceArray"
 
 or
 
-SMAParseReponseFile.exe -ReponseFile=.\MyResponce.txt -CaptureTag="DataSource" -TagValueFilename=".\MyParsedReponse.txt"
+SMAParseReponseFile.exe -ReponseFile=.\MyResposce.txt -CaptureTag="DataSource" -TagValueFilename=".\MyParsedReponse.txt"
 
 :::
 
@@ -134,7 +134,7 @@ If ```–OutputFormat``` is set to ```CSV```, then a CSV file will be created fr
 
 Defines the command line argument to designate the name of the file if the value is to be saved in a global property.
 
-### -ResponceFile
+### -ResponseFile
 
 Defines the file containing the response from the web services. It is expected that this file will be created from SMAFICSConnector (by adding the command line parameter –ResponseOutputFilename).
 
@@ -164,7 +164,7 @@ The current tag name is followed by the desired tag name. Both must be ter- mina
 
 ## Configuration Settings
 
-SMAParseResponseFile does have a configuration file so that it knows how to update the propert once a value is found in the Repoonce File. Below is an example of the Configuration File.
+SMAParseResponseFile does have a configuration file so that it knows how to update the propert once a value is found in the Response File. Below is an example of the Configuration File.
 
 ```
 ##############################################
