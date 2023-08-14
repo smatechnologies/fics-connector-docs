@@ -14,7 +14,7 @@ Any supported version of Windows with .NET Framework 4.5 must be installed.
 
 ## Install Process
 
-Download the SMAFICSConnector.zip which contains the OpCon compoents to successfully automate FICS jobs via OpCon.
+Download the SMAFICSConnector.zip which contains the OpCon components to successfully automate FICS jobs via OpCon.
 
 Once downloaded, unzip the connector in the same path where OpCon is installed. You may need to create an FICS directory in ProgramData if you installed OpCon on the C Drive.
 
