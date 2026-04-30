@@ -1,9 +1,13 @@
 ---
-slug: '/'
-sidebar_label: 'Release Notes'
+title: FICS Connector release notes
+description: "Version history and change details for the FICS Connector, including new features, improvements, and bug fixes."
+sidebar_label: Release notes
+tags:
+  - Reference
+  - Automation Engineer
+  - Getting Started
 ---
 
-# Release Notes
+# FICS Connector release notes
 
-no data as of 08/03/2022.
-
+No release notes are documented at this time.

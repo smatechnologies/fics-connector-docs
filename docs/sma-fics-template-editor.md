@@ -1,119 +1,132 @@
 ---
-sidebar_label: 'SMAFICSTemplateEditor'
+title: SMAFICSTemplateEditor
+description: "Reference and walkthrough for SMAFICSTemplateEditor, the Windows GUI tool for creating and editing FICS request template files."
+sidebar_label: SMAFICSTemplateEditor
+tags:
+  - Conceptual
+  - Automation Engineer
+  - Getting Started
 ---
 
-# SMA FICS Template Editor
+# SMAFICSTemplateEditor
 
-## Overview
+## What is it?
 
-SMAFICSTemplateEditor is a Windows-based simple editor that allows users to modify the template file copied from the documentation website. The template editor maintains the data types of each of the fields and the format of the request. It is important to realize that this tool is optional.
+SMAFICSTemplateEditor is a Windows-based editor that allows you to modify the template file copied from the FICS documentation website. The template editor maintains the data types of each field and the format of the request.
 
-:::info Note
+- Use this tool when you want to build or modify a FICS request template file without manually editing JSON
+- Use this tool to ensure data types and JSON structure are preserved when adding or removing fields
 
-If a required data structure cannot be built by the available functions, the request file can be edited in Notepad (or another suitable editor).
+:::note
+This tool is optional. If a required data structure cannot be built using the available functions, the request file can be edited in Notepad or another suitable editor.
 :::
 
 ## Walkthrough
 
 When a template file is first opened, it appears similar to the following:
 
-![img alt](../static/img/smaficstemplate1.png)
+![SMAFICSTemplateEditor initial view](../static/img/smaficstemplate1.png)
 
-At this point, the user can read an existing request file either by clicking the **Read File** button or by clicking the **Fetch Method Definitions** button to load the available definitions (from the web service) and then select one of the functions by clicking the **Select Method Template** button.
+At this point, you can load a request file in one of two ways:
 
-**IF** the user clicks on the **Fetch Method Definitions** button, a wait cursor appears and then all of the buttons become enabled. If the user then clicks the **Select Method Template** button, a screen similar to the one below is displayed.
+- Select the **Read File** button to open an existing request file
+- Select the **Fetch Method Definitions** button to load the available definitions from the web service, then select the **Select Method Template** button to choose a method
 
-![img alt](../static/img/smaficstemplate2.png)
+When you select the **Fetch Method Definitions** button, a wait cursor appears and then all buttons become enabled. Selecting the **Select Method Template** button displays a screen similar to the following:
 
-This represents a list sorted by Folder, then Sub-Folder, and then Method Name. Since some of the Program Names are duplicated, e.g., ```Reprint Investors (s)```, the actual Method Name is shown in brackets to help identify the desired functionality.
+![SMAFICSTemplateEditor method selection](../static/img/smaficstemplate2.png)
 
-Click one of the Program Name lines to load its definition in the edit window. As an example, if the user selects ```Create ACH File [CreateACHFile]```, the request information would appear as:
+This list is sorted by Folder, then Sub-Folder, then Method Name. Because some Program Names are duplicated (for example, `Reprint Investors (s)`), the actual Method Name is shown in brackets to help identify the desired functionality.
 
-![img alt](../static/img/smaficstemplate3.png)
+Select one of the Program Name lines to load its definition in the edit window. For example, selecting `Create ACH File [CreateACHFile]` displays the request information as follows:
 
-The selected method is displayed as the first line (```Payments -> Automated -> Create ACH File [CreateACHFile]```). Different types of data are displayed. There are simple items (like ```IncludeLoansWithStops``` or ```Object Item 1```) and groups (like ```Array Value #0```) that contain a col- lection of items.
+![SMAFICSTemplateEditor with method loaded](../static/img/smaficstemplate3.png)
 
-:::info Note
+The selected method is displayed as the first line (`Payments -> Automated -> Create ACH File [CreateACHFile]`). Different types of data are displayed. There are simple items (such as `IncludeLoansWithStops` or `Object Item 1`) and groups (such as `Array Value #0`) that contain a collection of items.
 
-The group name are not included in the final request file; it is shown only to help the user understand the structure.
+:::note
+Group names are not included in the final request file. They are shown only to help you understand the structure.
 :::
 
-Lastly, there are containers (like ```DatesToConvert```) that contain multiple objects (either items or groups).
+There are also containers (such as `DatesToConvert`) that contain multiple objects (either items or groups).
 
-At any time, the user can click the **Show Generated JSON** button to see what the request file will look like when saved. Before making any changes, the **Show Generated JSON** button shows:
+At any time, select the **Show Generated JSON** button to preview what the request file will look like when saved. Before making any changes, the **Show Generated JSON** button displays the following:
 
-![img alt](../static/img/smaficstemplate4.png)
+![SMAFICSTemplateEditor generated JSON view](../static/img/smaficstemplate4.png)
 
-:::info Note
-
-There may be *comment* lones at the bottom of the ifle that are used by the tool kit components to maintain the datatype or available selection choices. In this case, the selection choices for ```SendTo``` are:
-* ```NotSpecified```
-* ```FederalReserceBank```
-* ```CorrespondentBank```
+:::note
+There may be comment lines at the bottom of the file that the toolkit components use to maintain the data type or available selection choices. For example, the selection choices for `SendTo` are:
+- `NotSpecified`
+- `FederalReserveBank`
+- `CorrespondentBank`
 :::
 
-![img alt](../static/img/smaficstemplate5.png)
+![SMAFICSTemplateEditor comment lines](../static/img/smaficstemplate5.png)
 
-### Right Click Options
+### Right-click options
 
-#### On a Container
+#### On a container
 
-If the user right-clicks on a container line, a pop-up menu will be displayed offering the choice of ```InsertGroup```.
+If you right-click a container line, a pop-up menu offers the choice of **InsertGroup**.
 
-```InsertGroup``` will create a new group entry immediately below the container line. New items can then be inserted into the new group.
+**InsertGroup** creates a new group entry immediately below the container line. New items can then be inserted into the new group.
 
-#### On a Group
+#### On a group
 
-If the user right-clicks on a group line, a pop-up menu will be displayed offering these choices:
-* ```Delete Group```
-* ```Duplicate Group```
-* ```Insert New Items```
+If you right-click a group line, a pop-up menu offers the following choices:
 
-```Delete Item``` will operate as expected; the group (and its descendants) will be removed from the request definition.
-```Duplicate Group``` will create a new group containing copies of all of the descendants of the selected group.
-```Insert New Item``` will display the new Item entry screen:
+- **Delete Group**
+- **Duplicate Group**
+- **Insert New Items**
 
-![img alt](../static/img/smaficstemplate6.png)
+**Delete Group** removes the group and all of its descendants from the request definition.
 
-:::info Note
-OpCon Global Properties can be used **ONLY** for datatype setrings and dates. SMAFICSConnector performs the substitution before sending it to the web service.
+**Duplicate Group** creates a new group containing copies of all descendants of the selected group.
+
+**Insert New Item** displays the new item entry screen:
+
+![SMAFICSTemplateEditor new item entry screen](../static/img/smaficstemplate6.png)
+
+:::note
+OpCon global properties can be used **only** for data type strings and dates. SMAFICSConnector performs the substitution before sending the request to the web service.
 :::
 
-If the **Commit Change** button is selected (after entering data in ```Item Name``` and ```Item Value```) the new item is created immediately after the selected group.
+After entering data in the **Item Name** and **Item Value** fields, select the **Commit Change** button. The new item is created immediately after the selected group.
 
-#### On an Item
+#### On an item
 
-If the user right-clicks on an Item line, a pop-up menu is displayed offering these choices:
-* ```Delete Item```
-* ```Duplicate Item```
-* ```Edit Item```
-* ```Insert Item```
+If you right-click an item line, a pop-up menu offers the following choices:
 
-```Delete Item``` operates as expected; the item is be removed from the request definition. 
-```Duplicate Item``` creates a similarly named item (```- COPY``` is appended to the item name) immediately below the selected item. In the following screenshot, the user right-clicked ```CreatePrenoteOnlyFile``` and selected ```Duplicate Item```.
+- **Delete Item**
+- **Duplicate Item**
+- **Edit Item**
+- **Insert Item**
 
-![img alt](../static/img/smaficstemplate7.png)
+**Delete Item** removes the item from the request definition.
 
-Selecting ```Edit Item``` opens an editing window. The user can rename the newly created duplicate of ```CreatePrenoteOnlyFile``` or change the value.
+**Duplicate Item** creates a similarly named item (`- COPY` is appended to the item name) immediately below the selected item. In the following screenshot, the user right-clicked `CreatePrenoteOnlyFile` and selected **Duplicate Item**:
 
-![img alt](../static/img/smaficstemplate8.png)
+![SMAFICSTemplateEditor duplicate item](../static/img/smaficstemplate7.png)
 
-The original datatype is preserved.
+Selecting **Edit Item** opens an editing window. You can rename the newly created duplicate of `CreatePrenoteOnlyFile` or change its value:
 
-To create a new item (with a different datatype), select ```Insert Item```. The following edit window displays:
+![SMAFICSTemplateEditor edit item](../static/img/smaficstemplate8.png)
 
-![img alt](../static/img/smaficstemplate8.png)
+The original data type is preserved.
 
-:::info Note
+To create a new item with a different data type, select **Insert Item**. The following edit window is displayed:
 
-OpCon Global Properties can be used only for datatype stings and dates. SMAFICSConnector performs the substitution before sending it to the web service.
+![SMAFICSTemplateEditor insert item](../static/img/smaficstemplate8.png)
+
+:::note
+OpCon global properties can be used only for data type strings and dates. SMAFICSConnector performs the substitution before sending the request to the web service.
 :::
 
-If the **Commit Change** button is selected (after entering data in ```Item Nem``` and ```Item Value```), the new item is created immediatly after the selected item.
+After entering data in the **Item Name** and **Item Value** fields, select the **Commit Change** button. The new item is created immediately after the selected item.
 
-## Configuration Settings
+## Configuration settings
 
-SMAFICSTemplateEditor has a configuration file so that the UI can connect to your FICS environment. Below is an example of the Configuration File.
+SMAFICSTemplateEditor uses a configuration file to connect to your FICS environment. The following is an example configuration file:
 
 ```
 ##############################################
@@ -132,22 +145,45 @@ ExampleBaseURL=
 RequestTimeoutInMilliseconds=
 ```
 
-### LoginConnectionName
+| Setting | What it does |
+|---|---|
+| `LoginConnectionName` | Defines the FICS connection name (database) to connect to. Must match the **LoginConnectionName** in `SMAFICSConnector.ini`. |
+| `MethodDocumentationURL` | Defines the URL that returns documentation for the available web service methods. FICS can supply this information. |
+| `SpecialsDocumentationURL` | Defines the URL that returns documentation for the available special web service methods. The **LoginConnectionName** is appended to this URL. FICS can supply this information. |
+| `ExampleBaseURL` | Defines the base URL that returns documentation for a specific web service method. FICS can supply this information. |
+| `RequestTimeoutInMilliseconds` | Defines the maximum number of milliseconds to wait for the method documentation call to complete. If the call does not complete within this time, the application displays an error message. |
 
-Defines the FICS connection name (Database) to connect to. This should match the **LoginConnectionName** specified in SMAFICSConnector.ini file.
+**Related topics:**
 
-### MethodDocumentationURL
+- [FICS Connector overview](./overview.md)
+- [SMAFICSConnector](./sma-fics-connector.md)
 
-Defines the URL that returns documentation for the available web service methods. FICS can supply this information.
+## FAQs
 
-### SpecialsDocumentationURL
+**Is SMAFICSTemplateEditor required to create request files?**
 
-Defines the URL that returns documentation for the available "special" web service methods. FICS can supply this information. The **LoginConnectionName** will be appended to this URL.
+No. SMAFICSTemplateEditor is optional. You can create and edit request files in any text editor. The tool is recommended when you need to preserve data types and JSON structure without manually editing the file.
 
-### ExampleBaseURL
+**What is the difference between a container, a group, and an item?**
 
-Defines the base URL that returns documentation for a specific web service method. FICS can supply this information.
+A container holds multiple groups. A group holds multiple items. An item is a single name-value pair in the request. Groups and items can be added, duplicated, or deleted using right-click options.
 
-### RequestTimeoutInMilliseconds
+**Where do I get the FICS URL values for the configuration file?**
 
-Defines the maximum number of milliseconds to wait for the call for the Method documentation to complete. If the call has not completed within this time, the application displays an error message.
+The `MethodDocumentationURL`, `SpecialsDocumentationURL`, and `ExampleBaseURL` values are provided by FICS. Contact your FICS representative to obtain these URLs.
+
+**Can I use OpCon properties in item values?**
+
+Yes, but only for data type strings and dates. SMAFICSConnector substitutes the OpCon property value before sending the request to the web service.
+
+## Glossary
+
+**Container** — A structural element in SMAFICSTemplateEditor that holds one or more groups. Containers are not included in the final request file; they are displayed only to show structure.
+
+**Group** — A structural element that holds one or more items. Groups are not included in the final request file but represent a logical collection of related fields.
+
+**Item** — A single name-value pair in the request template. Items map directly to fields in the FICS web service request.
+
+**LoginConnectionName** — The identifier for the FICS database connection. Must match the value configured in `SMAFICSConnector.ini`.
+
+**MethodDocumentationURL** — The URL provided by FICS that returns documentation for all available web service methods.

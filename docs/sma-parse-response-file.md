@@ -1,38 +1,54 @@
 ---
-sidebar_label: 'SMAParseResponseFile'
+title: SMAParseResponseFile
+description: "Command-line reference for SMAParseResponseFile, the utility that extracts tag values from FICS web service response files and saves them to OpCon properties or files."
+sidebar_label: SMAParseResponseFile
+tags:
+  - Reference
+  - Automation Engineer
+  - Getting Started
 ---
 
-# SMA Parse Response File
+# SMAParseResponseFile
 
-## Overview
+## What is it?
 
-There are occasions when tag values need to be pulled and saved for downstream processing from one of the responses to a web method. The SMAParseResponseFile application allows users to parse a saved response file to grab a value (or a structure) and save it in either an OpCon global property or a file. (This file can then be used with the SMA_INJECT_FILE directive to complete a request file for a web method.)
+SMAParseResponseFile parses a saved FICS web service response file to extract a tag value or structure, and saves the result to either an OpCon global property or a file. The saved file can then be used with the `SMA_INJECT_FILE` directive to complete a request file for a downstream web service method.
+
+- Use this utility when a downstream FICS job requires a value that was returned by an earlier FICS job in the same schedule
+- Use this utility to extract document content (such as a Base64-encoded report) from a FICS response for downstream processing
 
 :::tip Example
 
-SMAParseReponseFile.exe -ReponseFile=.\MyResponse.txt -CaptureTag="DataSource" -PropertyName="DataSourceArray"
+```
+SMAParseResponseFile.exe -ResponseFile=.\MyResponse.txt -CaptureTag="DataSource" -PropertyName="DataSourceArray"
+```
 
 or
 
-SMAParseReponseFile.exe -ReponseFile=.\MyResposce.txt -CaptureTag="DataSource" -TagValueFilename=".\MyParsedReponse.txt"
+```
+SMAParseResponseFile.exe -ResponseFile=.\MyResponse.txt -CaptureTag="DataSource" -TagValueFilename=".\MyParsedResponse.txt"
+```
 
 :::
 
-## Command Line Options
+## Command line options
 
 ### -CaptureTag
-This defines the tag whose value needs to be captured. If it occures in a nested fashion, specify the path to is. Consider a response file containing:
+
+Defines the tag whose value needs to be captured. If the tag is nested, specify the full path to it using pipe (`|`) separators.
+
+Consider a response file containing:
 
 ```json
 {
-    "Content": { 
+    "Content": {
         "ResultSet": {
-            "table1": [ 
+            "table1": [
                 {
                     "Bank": "101",
                     "Investor": "033",
                     "Group": "001",
-                    "Investor Name": "Freddie Mac", 
+                    "Investor Name": "Freddie Mac",
                     "Reporting Method": "Freddie Mac"
                 }
             ]
@@ -43,75 +59,85 @@ This defines the tag whose value needs to be captured. If it occures in a nested
 }
 ```
 
-If the value of **"Bank"** was desired, the user should specify:
+To capture the value of **Bank**, specify:
 
-```-CaptureTag="Content|ResultSet|table1|Bank"```
+```
+-CaptureTag="Content|ResultSet|table1|Bank"
+```
 
-Also, note the brackets following **"table1"**. This indicates that there are an array of values returned. SMAParseResponseFile returns the value of the last member of the array.
+Note the brackets following `table1`. This indicates that an array of values is returned. SMAParseResponseFile returns the value of the last member of the array.
 
-If the desired report to retrieve, i.e., OutputFormat=DATA, is in a Docu- ment Collection, you can specify the Document Collection along with the Name property of the report that you wish to retrieve.
+If the desired report is in a Document Collection, you can specify the Document Collection along with the `Name` property of the report to retrieve.
 
 :::tip Example
 
-The response file appears like the following:
-```
+Given a response file like the following:
+
+```json
 {
-    "GlobalTotal": null, 
+    "GlobalTotal": null,
     "DocumentCollection": [
         {
-            "DocumentBase64": "JVBERi0xLjMNCiXi48/TDQoxIDB...", 
+            "DocumentBase64": "JVBERi0xLjMNCiXi48/TDQoxIDB...",
             "Name": "Document 1"
         },
         {
             "DocumentBase64": "JVBERi0xLjMNCiXi48/TDQoxIDA...",
             "Name": "Document 2"
-        },
-... 
+        }
+    ]
 }
 ```
 
-The report called **"Document 2"** could be retreived by the following specifications on the command line:
-```-CatupreTag="DocumentCollection[Document 2]"```
+To retrieve **Document 2**, specify:
 
-If -OutputFormat=CSV, this is the name of the container object of the array that is to be saved in a .csv file.
+```
+-CaptureTag="DocumentCollection[Document 2]"
+```
+
+If `-OutputFormat=CSV`, `-CaptureTag` names the container object of the array to save as a CSV file.
 
 :::
 
 ### -ConfigFile
 
-If the desired configuration file is not SMAParseResponseFile.ini, it can be specified here.
+Specifies the configuration file to use if `SMAParseResponseFile.ini` is not the desired configuration file.
 
-### -CSVInludeHeaders
+### -CSVIncludeHeaders
 
-Specify this if the property names should be included as the first line of the .csv file.
+When specified, property names are included as the first line of the CSV file.
 
 ### -MissingFileExitValue
 
-It may be desirable to exit with a value other than the general error exit value (1). If the specified file cannot be found, SMAParseFile will exit with the value specified by this parameter
+Defines an exit code to use when the specified response file cannot be found. By default, SMAParseResponseFile exits with value `1` on error. Use this parameter to specify a different exit value for the missing-file condition.
 
 ### -OutputFormat
 
-This is an optional parameter. By default, the tag value will be saved as a JSON construct to be used in an SMA_INJECT_FILE specified. 
+Optional. By default, the tag value is saved as a JSON construct suitable for use with `SMA_INJECT_FILE`.
 
 :::tip Example
+
+Default JSON output:
+
 ```json
 [
     {
         "Bank": "87",
         "Investor": "087",
         "Group": "001",
-        "Investor Name": "Freddie Mac", 
+        "Investor Name": "Freddie Mac",
         "Reporting Method": "Freddie Mac"
-    } 
+    }
 ]
 ```
+
 :::
 
-However, there may be response files that contain "non-standard" layouts that SMAFICSConnector cannot parse. 
+For response files that contain non-standard layouts that SMAFICSConnector cannot parse, use `-OutputFormat=DATA`:
 
 :::tip Example
 
-Consider this snippet:
+For a response containing:
 
 ```
 {
@@ -120,51 +146,49 @@ Consider this snippet:
             "DocumentBase64": "JVBERi0xLjIDAgb2JqDQo..."
 ```
 
-If ```–OutputFormat``` is set to ```DATA``` and ```–CaptureTag``` is set to ```"LateNoticeSummaryReport|Document|DocumentBase64"```, the tag contents will be saved in ```–TagValueFilename```.
+Setting `-OutputFormat=DATA` and `-CaptureTag="LateNoticeSummaryReport|Document|DocumentBase64"` saves the tag contents directly to `-TagValueFilename`.
+
 :::
 
-:::info Note
-If ```–OutputFormat=DATA``` is specified, then use of ```–PropertyName``` and ```–TranslationFile``` are not allowed.
+:::note
+If `-OutputFormat=DATA` is specified, `-PropertyName` and `-TranslationFilename` cannot be used.
 
-If ```–OutputFormat``` is set to ```CSV```, then a CSV file will be created from the members of the array that are in the container object specified by ```–CaptureTag```.
-
+If `-OutputFormat=CSV`, a CSV file is created from the members of the array in the container object specified by `-CaptureTag`.
 :::
 
 ### -PropertyName
 
-Defines the command line argument to designate the name of the file if the value is to be saved in a global property.
+Defines the name of the OpCon global property in which to save the captured tag value.
 
 ### -ResponseFile
 
-Defines the file containing the response from the web services. It is expected that this file will be created from SMAFICSConnector (by adding the command line parameter –ResponseOutputFilename).
+Defines the file containing the FICS web service response. This file is typically created by SMAFICSConnector using the `-ResponceOutputFilename` parameter.
 
-### -TagValueFileName
+### -TagValueFilename
 
-Defines the command line argument to designate the name of the file if the value is to be saved in a file.
+Defines the name of the file in which to save the captured tag value.
 
-### -TranslationFileName
+### -TranslationFilename
 
-This is an optional argument. It allows the user to re-map tag names. 
+Optional. Allows you to remap tag names in the output.
 
 :::tip Example
 
-If  one FICS query returns the tag name as **"Investor Name"**. However, to use that value in another FICS operation, it must be **"InvestorName"** with no spaces. 
-
-The translation file could look like:
+If one FICS query returns the tag name `"Investor Name"` but a downstream operation requires `"InvestorName"` without spaces, create a translation file like the following:
 
 ```
 [Tag Translations]
-Translation1="Investor Name":|"InvestorName":| 
-Translator2="Reporting Method":|"InvestorReportingCode"|
+Translation1="Investor Name":|"InvestorName":|
+Translation2="Reporting Method":|"InvestorReportingCode"|
 ```
 
-The current tag name is followed by the desired tag name. Both must be ter- minated with the vertical pipe symbol. Up to 100 translations are supported.
+The current tag name is followed by the desired tag name. Both must be terminated with the vertical pipe symbol (`|`). Up to 100 translations are supported.
 
 :::
 
-## Configuration Settings
+## Configuration settings
 
-SMAParseResponseFile does have a configuration file so that it knows how to update the propert once a value is found in the Response File. Below is an example of the Configuration File.
+SMAParseResponseFile uses a configuration file to connect to the OpCon database when saving values to global properties. The following is an example configuration file:
 
 ```
 ##############################################
@@ -182,31 +206,47 @@ OpConDBServer=
 OpConDBName=
 ```
 
-### OpConDBUser
+| Setting | What it does |
+|---|---|
+| `OpConDBUser` | Defines the SQL user account used to connect to the OpCon database. |
+| `OpConDBPassword` | Defines the password (or path to the encrypted password file) for the `OpConDBUser`. |
+| `OpConDBServer` | Defines the server name and instance of the SQL Server that hosts the OpCon database. |
+| `OpConDBName` | Defines the name of the OpCon database. |
 
-Defines the SQL user account to use to connect to the OpCon Database.
-
-:::info Note
-
-If OpConDBUser and OpConDBPassword are left blank, Windows Authentication ot the OpCon database will be attempted. This means the job must specify a domain user in the "User Id" field on the job details tab.
+:::note
+If `OpConDBUser` and `OpConDBPassword` are left blank, Windows Authentication to the OpCon database is attempted. The OpCon job must specify a domain user in the **User Id** field on the job details tab.
 :::
 
-### OpconDBPassword
+**Related topics:**
 
-Defines the password (or the path to the encrypted password file) for the OpConDBUser.
+- [FICS Connector overview](./overview.md)
+- [SMAFICSConnector](./sma-fics-connector.md)
+- [Reference information](./reference.md)
 
-:::info Note
+## FAQs
 
-If OpConDBUser and OpConDBPassword are left blank, Windows Authentication ot the OpCon database will be attempted. This means the job must specify a domain user in the "User Id" field on the job details tab.
-:::
+**What format does the response file use?**
 
-### OpConDBServer
+The response file is a JSON file saved by SMAFICSConnector using the `-ResponceOutputFilename` parameter. SMAParseResponseFile reads this file and extracts the specified tag value.
 
-Defines the server name (and instance) of the SQL Server that hosts the OpCon database.
+**Can I save a captured value to both a property and a file?**
 
-### OpConDBName
+No. You must use either `-PropertyName` (to save to an OpCon global property) or `-TagValueFilename` (to save to a file), not both in the same run.
 
-Defines the name of the OpCon database.
+**What happens if the response file is not found?**
 
+By default, SMAParseResponseFile exits with value `1`. Use `-MissingFileExitValue` to specify a different exit code for this condition, which allows downstream OpCon jobs to respond differently to a missing file versus other errors.
 
+**How do I handle a tag name with spaces?**
 
+Use `-TranslationFilename` to remap tag names that contain spaces to names without spaces for use in downstream FICS operations.
+
+## Glossary
+
+**CaptureTag** — The tag name (or pipe-separated path to a nested tag) whose value SMAParseResponseFile extracts from the response file.
+
+**Response file** — A JSON file containing the raw output of a FICS web service call. Created by SMAFICSConnector when `-ResponceOutputFilename` is specified.
+
+**Translation file** — An INI-style file that maps source tag names to replacement tag names. Used when a downstream FICS operation requires different field names than what the source response provides.
+
+**SMA_INJECT_FILE** — A directive in a FICS request file that instructs SMAFICSConnector to read and insert the contents of a second file at that position in the request.

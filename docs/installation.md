@@ -1,31 +1,72 @@
 ---
-sidebar_label: 'Installation'
+title: Installation
+description: "System requirements and installation steps for the FICS Connector toolkit on a Windows machine running OpCon."
+sidebar_label: Installation
+tags:
+  - Procedural
+  - System Administrator
+  - Getting Started
+  - Installation
 ---
 
 # Installation
 
-## Overview
+## What is it?
 
-Running FICS Mortgage Servicer jobs or FICS Mortgage Accountant jobs can be accomplished by using the applications included in this connector. The exposed interface point (from FICS) is instantiated in the form of web services. SMA Technologies provides the tools to allow users to craft request files then submit them to the appropriate web service interface.
+The FICS Connector is installed on the same machine where OpCon is installed. Running FICS Mortgage Servicer or Mortgage Accountant jobs can be accomplished by using the applications included in this connector. The exposed interface points from FICS are instantiated as web services, and SMA Technologies provides the tools to craft request files and submit them to the appropriate web service interface.
+
+- Use this when you are setting up OpCon to run FICS jobs for the first time
+- Use this when you need to verify system requirements before deploying the connector
 
 ## Requirements
 
 Any supported version of Windows with .NET Framework 4.5 must be installed.
 
-## Install Process
+## Install process
 
-Download the SMAFICSConnector.zip which contains the OpCon components to successfully automate FICS jobs via OpCon.
+To install the FICS Connector, complete the following steps:
 
-Once downloaded, unzip the connector in the same path where OpCon is installed. You may need to create an FICS directory in ProgramData if you installed OpCon on the C Drive.
+1. Download the `SMAFICSConnector.zip` file, which contains the OpCon components required to automate FICS jobs via OpCon.
+2. Unzip the connector in the same path where OpCon is installed. You may need to create an `FICS` directory in `ProgramData` if you installed OpCon on the C drive.
 
 :::tip Example
 
-If OpCon is installed on the C-drive, your FICS installaion would be broken out in two locations:
+If OpCon is installed on the C drive, your FICS installation is divided across two locations:
 
-* Executables and DLLs would be in ```C:\Program Files\OpConxps\FICS```
-* INI Files would be in ```C:\ProgramData\FICS```
+- Executables and DLLs: `C:\Program Files\OpConxps\FICS`
+- INI files: `C:\ProgramData\FICS`
 
-If OpCon is installed on a non-system drive, your FICS installation would be contained in one path: 
+If OpCon is installed on a non-system drive, your FICS installation is contained in one path:
 
-* Executables, DLLs, and INI files would all be in ```D:\OpConxps\FICS```
+- Executables, DLLs, and INI files: `D:\OpConxps\FICS`
+
 :::
+
+The FICS Connector is installed and ready for configuration.
+
+**Related topics:**
+
+- [FICS Connector overview](./overview.md)
+- [SMAFICSConnector](./sma-fics-connector.md)
+
+## FAQs
+
+**What Windows versions are supported?**
+
+Any supported version of Windows is compatible with the FICS Connector, provided that .NET Framework 4.5 is installed.
+
+**Where should I install the connector if OpCon is on a non-system drive?**
+
+If OpCon is installed on a non-system drive (for example, `D:\`), place all connector files — executables, DLLs, and INI files — in a single path such as `D:\OpConxps\FICS`.
+
+**Do I need to create the FICS directory manually?**
+
+You may need to create the `FICS` directory under `ProgramData` if OpCon is installed on the C drive. The installer does not always create this directory automatically.
+
+## Glossary
+
+**.NET Framework 4.5** — A Microsoft runtime framework required by the FICS Connector executables. Must be installed on the Windows machine before the connector can run.
+
+**ProgramData** — A Windows system folder (`C:\ProgramData`) used to store application configuration files that apply to all users on the machine. The FICS Connector INI files are stored here when OpCon is installed on the system drive.
+
+**INI file** — A configuration file used by FICS Connector applications to store connection parameters and settings. Stored separately from the executables when OpCon is installed on the system drive.

@@ -1,138 +1,197 @@
 ---
-sidebar_label: 'SMAFICSConnector'
+title: SMAFICSConnector
+description: "Command-line reference for SMAFICSConnector, the utility that submits FICS request files to FICS Mortgage Servicer and Mortgage Accountant web services."
+sidebar_label: SMAFICSConnector
+tags:
+  - Reference
+  - Automation Engineer
+  - Getting Started
 ---
 
-# SMA FICS Connector
+# SMAFICSConnector
 
-## Overview
+## What is it?
 
-This command-line utility connects to the FICS API in order to sumit the request file to the appropriate web service interface (Mortgage Servier, Mortgage Accountant, ect.).
+SMAFICSConnector is a command-line utility that connects to the FICS API and submits a request file to the appropriate web service interface (Mortgage Servicer, Mortgage Accountant, etc.).
+
+- Use SMAFICSConnector as the executable in an OpCon job to run FICS operations on a schedule
+- Use the `-VerboseLogging` parameter when troubleshooting to capture the full request and response in the log file
 
 :::tip Example
 
+```
 SMAFICSConnector.exe -VerboseLogging -Request=GetFannieMaeGuarantyFeeSummary -RequestFile=.\BasicMessage.txt
+```
 
 :::
 
-
-## Command Line
+## Command line options
 
 ### -AuthorizationToken
 
-Dictates that the token specified should be used for authentication. The option will reduce the number of FICS requests as a new token will not be generated each time.
+Specifies the token to use for authentication. This option reduces the number of FICS requests because a new token is not generated on each run.
 
 ### -ConfigFile
 
-Defines the configuration file to use if SMAFICSConnector.ini is not the desired configuration file.
+Defines the configuration file to use if `SMAFICSConnector.ini` is not the desired configuration file.
 
 ### -DocumentCollectionName
 
-If a document collection is to be processed, the default name for the collection is "DocumentCollection." This command line parameter allows the user to change the name of the collection to be searched.
+If a document collection is to be processed, the default collection name is `DocumentCollection`. This parameter allows you to change the collection name to search.
 
 ### -Document1 ... -Document99
 
-Sometimes, documents are returned in "collections" (or "arrays"). If so, the appropriate document can be saved by specifying the desired path and name. 
+Sometimes documents are returned in collections (or arrays). If so, the appropriate document can be saved by specifying the desired path and file name.
 
 :::tip Example
 
-If a collection is desired, you can specify: ```-Document4=<path and name of file>```
+To save a specific document from a collection, specify:
+
+```
+-Document4=<path and name of file>
+```
 
 :::
 
-If a document specifier is not included on the command line, the document will not be saved as a file on the disk. It does **NOT** generate an error for ```-Document``` commands that are included on the command line that have no corresponding documents returned.
+If a document specifier is not included on the command line, the document is not saved to disk. No error is generated for `-Document` parameters that have no corresponding document in the response.
 
 ### -DocumentBase64TagFilename
 
-If a ```DocumentBase64``` tag is found, the contents are stored in this file. This argument overrides the ```–OutputFilename``` argument (for ```DocumentBase64``` tags). If the keyword **SUPPRESS** is used instead of a file path and name, no output file will be created for this tag.
+If a `DocumentBase64` tag is found in the response, the contents are stored in this file. This argument overrides `-OutputFilename` for `DocumentBase64` tags. If the keyword `SUPPRESS` is used instead of a file path, no output file is created for this tag.
 
 ### -FileTagFilename
 
-If a ```File``` tag is found, the contents are stored in this file. This argument overrides the ```–OutputFilename``` argument (for "File" tags). If the keyword **SUPPRESS** is used instead of a file path and name, no output file will be created for this tag.
+If a `File` tag is found in the response, the contents are stored in this file. This argument overrides `-OutputFilename` for `File` tags. If the keyword `SUPPRESS` is used instead of a file path, no output file is created for this tag.
 
 ### -OutputFilename
 
-If a report is returned, this is the path (and name) under which to store the report. If either a "File" tag or a "DocumentBase64" tag is found, the contents are stored in this file. This can be overridden by utilizing the ```-FileTageFilename``` argument or the ```-DocumentBase64TagFilename``` argument. If the response is the same, it is possible to have BOTH a "File" tag and a "DocumentBase64" tag.
+If a report is returned, this is the path and file name under which to store the report. If either a `File` tag or a `DocumentBase64` tag is found, the contents are stored in this file. This can be overridden by `-FileTagFilename` or `-DocumentBase64TagFilename`. It is possible to have both a `File` tag and a `DocumentBase64` tag in the same response.
 
-```-OutputFilename``` has been deprecated and will be removed in a future version of SMAFICSConnector. Use either ```-FileTagname``` or ```-DocumentBase64TagFilename``` (or preferably, use SMAParseResponseFile).
+:::note
+`-OutputFilename` has been deprecated and will be removed in a future version of SMAFICSConnector. Use `-FileTagFilename` or `-DocumentBase64TagFilename` instead, or use SMAParseResponseFile.
+:::
 
 ### -FileDataFilename
 
-If this value is specified, the file indicated is read and the contents are inserted as the value of a FileData entry in the response file.
+If this value is specified, the indicated file is read and its contents are inserted as the value of a `FileData` entry in the request file.
 
 ### -Request
 
-Defines the request specification that will be appended to the BaseURL to select the desired operation.
+Defines the request specification appended to the `BaseURL` to select the desired operation.
 
 ### -RequestFile
 
 Defines the file containing the formatted parameters required for the request.
 
-
 ### -ResponceOutputFilename
 
-This parameter allows the user to save the raw response XML in a file for downstream processing. For example, certain tag values may need to be extracted with SMAParseResponseFile.
+Saves the raw response XML to a file for downstream processing. Use this when tag values need to be extracted with SMAParseResponseFile.
 
 ### -SystemData
 
-If the current date is NOT to be used for the processing date, the user can specify the processing date by setting ```–SystemDate```. The format is YYYY-MM-DD.
+Specifies the processing date when the current date should not be used. The format is `YYYY-MM-DD`.
 
-
-:::info Note
-
-If this parameter is NOT specified, the current datetime stamp will be inserted into the request file.
-
+:::note
+If this parameter is not specified, the current datetime stamp is inserted into the request file.
 :::
 
 ### -VerboseLogging
 
-If this value is specified, the request and raw response is dumped to the log file.
+When specified, dumps the request and raw response to the log file.
 
-:::info Note about Request Files
+---
 
-Besides containing data, the request file can have tag values that are global properties and Schedule Instance properties. The only supported global properties are User Defined Properties, not System Properties or Managed System Properties.
+:::note About request files
 
-There is a special designation called SMA_INJECT_FILE. This directive will cause the contents of the specified file to be included inline. It should be specified on a line by itself as in: ```SMA_INJECT_FILE=.\injectedLines.txt```
+Besides containing data, request files can include OpCon global property tokens and Schedule Instance property tokens using the `[[Property Name]]` syntax. Only User Defined Properties are supported — System Properties and Managed System Properties are not.
 
-This would instruct SMAFICSConnector to read ```.\injectedLines.txt``` and insert the lines at this point in the request packet.
+There is a special directive called `SMA_INJECT_FILE`. This directive causes the contents of a specified file to be included inline at that point in the request. Specify it on its own line:
+
+```
+SMA_INJECT_FILE=.\injectedLines.txt
+```
+
+This instructs SMAFICSConnector to read `.\injectedLines.txt` and insert its lines at that point in the request packet.
 
 :::
 
-:::tip Example about CSV Files
+:::tip Example: CSV files
 
-The ```-CSVContainerTag``` command line argument must indicate the container object of the array to be converted to the .csv file. A seen in the following simple file, the container object is ```Data```. So, to create a .csv file called ```C:\Example.csv``` with headers.
+The `-CSVContainerTag` parameter must indicate the container object of the array to convert to a CSV file. In the following example response, the container object is `Data`:
 
-```JSON
+```json
 {
     "GlobalTotal": null,
-    "Data": { 
-    "DataSource": [
-        {
-            "LoanId": 833.0,
-            "LoanName": "SMITH, JANE L",
-            "DueDate": "2015-05-01T00:00:00",
-            "StopCode": null,
-            "PhCheckFee": 0.0
-        },
-        {
-            "LoanId": 4038.0,
-            "LoanName": "SMITH, Janet R",
-            "DueDate": "2015-05-01T00:00:00",
-            "StopCode": null,
-            "PhCheckFee": 0.0
-        },
-        {
-            "LoanId": 4218.0,
-            "LoanName": "SMITH, JANE L",
-            "DueDate": "2015-05-01T00:00:00",
-            "StopCode": null,
-            "PhCheckFee": 0.0
-        }
-    ]
+    "Data": {
+        "DataSource": [
+            {
+                "LoanId": 833.0,
+                "LoanName": "SMITH, JANE L",
+                "DueDate": "2015-05-01T00:00:00",
+                "StopCode": null,
+                "PhCheckFee": 0.0
+            },
+            {
+                "LoanId": 4038.0,
+                "LoanName": "SMITH, Janet R",
+                "DueDate": "2015-05-01T00:00:00",
+                "StopCode": null,
+                "PhCheckFee": 0.0
+            },
+            {
+                "LoanId": 4218.0,
+                "LoanName": "SMITH, JANE L",
+                "DueDate": "2015-05-01T00:00:00",
+                "StopCode": null,
+                "PhCheckFee": 0.0
+            }
+        ]
     },
-    "APISuccessful" : true
+    "APISuccessful": true
 }
 ```
 
-On the command line, you would specify: ```-CSVContainerTag="Data" -CSVOutputFilename="C:\myfile.csv" -CSVIncludeHeaders```
+On the command line, specify:
+
+```
+-CSVContainerTag="Data" -CSVOutputFilename="C:\myfile.csv" -CSVIncludeHeaders
+```
 
 :::
+
+**Related topics:**
+
+- [FICS Connector overview](./overview.md)
+- [SMAFICSTemplateEditor](./sma-fics-template-editor.md)
+- [SMAParseResponseFile](./sma-parse-response-file.md)
+- [Reference information](./reference.md)
+
+## FAQs
+
+**How do I use a different configuration file?**
+
+Use the `-ConfigFile` parameter to specify the path to an alternative configuration file. For example: `-ConfigFile=.\MyConfig.ini`.
+
+**What is the difference between `-FileTagFilename` and `-DocumentBase64TagFilename`?**
+
+Both override `-OutputFilename` for their respective tag types. Use `-FileTagFilename` when the response contains a `File` tag, and `-DocumentBase64TagFilename` when it contains a `DocumentBase64` tag. A response can contain both tag types simultaneously.
+
+**Can I pass OpCon schedule dates or properties as part of the request?**
+
+Yes. Use the `[[Property Name]]` token syntax in your request file. OpCon substitutes the property value before SMAFICSConnector sends the request. Only User Defined Properties and Schedule Instance properties are supported.
+
+**What does `-VerboseLogging` write to the log?**
+
+With verbose logging enabled, SMAFICSConnector writes the full request body and the raw response XML to the connector log file. Use this for troubleshooting failed or unexpected responses.
+
+## Glossary
+
+**Request file** — A text file containing the formatted JSON or XML parameters for a FICS web service operation. Referenced by `-RequestFile` on the command line.
+
+**BaseURL** — The base URL of the FICS web service, defined in `SMAFICSConnector.ini`. The `-Request` parameter value is appended to this URL to form the complete endpoint address.
+
+**Authorization token** — A credential used to authenticate with the FICS web service. Passing the token via `-AuthorizationToken` avoids generating a new token on each run.
+
+**SMA_INJECT_FILE** — A directive placed in a request file that causes SMAFICSConnector to read a second file and insert its contents inline at that position in the request.
+
+**DocumentCollection** — A named array in a FICS response that contains one or more documents. Use `-DocumentCollectionName` to specify a non-default collection name.

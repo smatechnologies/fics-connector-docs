@@ -1,8 +1,61 @@
 ---
 slug: '/'
-sidebar_label: 'SMA FICS Connector'
+hide_table_of_contents: true
+displayed_sidebar: null
 ---
 
-# SMA FICS Connector
+# FICS Connector
 
-The FICS Connector provides connectivity that allows an OpCon job to submit a request to FICS Mortgage Servicer. Running FICS Mortgage Servicer jobs or FICS Mortgage Accountant jobs can be accomplished by using the applications included in this toolkit. The exposed interface point (from FICS) is exposed in the form of web services. SMA Technologies provides the tools to allow users to craft request files and then submit them to the appropriate web service interface.
+The FICS Connector enables OpCon to automate FICS Mortgage Servicer and Mortgage Accountant operations by submitting requests to FICS web services.
+
+<div style={{display: 'flex', gap: '0.75rem', alignItems: 'flex-start', flexWrap: 'wrap', marginTop: '1rem'}}>
+
+<div style={{flex: '1', minWidth: '160px', display: 'flex', flexDirection: 'column', gap: '0.6rem'}}>
+
+<div style={{background: 'var(--ifm-card-background-color)', border: '1px solid var(--ifm-color-emphasis-400)', borderRadius: '10px', padding: '0.75rem 1rem'}}>
+
+### Overview
+
+- [Overview](./overview.md)
+- [Release Notes](./release-notes.md)
+
+</div>
+
+<div style={{background: 'var(--ifm-card-background-color)', border: '1px solid var(--ifm-color-emphasis-400)', borderRadius: '10px', padding: '0.75rem 1rem'}}>
+
+### Installation
+
+- [Installation](./installation.md)
+
+</div>
+
+</div>
+
+<div style={{flex: '1', minWidth: '160px', display: 'flex', flexDirection: 'column', gap: '0.6rem'}}>
+
+<div style={{background: 'var(--ifm-card-background-color)', border: '1px solid var(--ifm-color-emphasis-400)', borderRadius: '10px', padding: '0.75rem 1rem'}}>
+
+### Tools
+
+- [SMAFICSConnector](./sma-fics-connector.md)
+- [SMAFICSTemplateEditor](./sma-fics-template-editor.md)
+- [SMAParseResponseFile](./sma-parse-response-file.md)
+- [SMACreatePasswordFile](./sma-create-password-file.md)
+
+</div>
+
+</div>
+
+<div style={{flex: '1', minWidth: '160px', display: 'flex', flexDirection: 'column', gap: '0.6rem'}}>
+
+<div style={{background: 'var(--ifm-card-background-color)', border: '1px solid var(--ifm-color-emphasis-400)', borderRadius: '10px', padding: '0.75rem 1rem'}}>
+
+### Reference
+
+- [Reference information](./reference.md)
+
+</div>
+
+</div>
+
+</div>
