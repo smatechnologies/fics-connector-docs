@@ -20,7 +20,7 @@ The FICS Connector is installed on the same machine where OpCon is installed. Ru
 
 ## Requirements
 
-Any supported version of Windows with .NET Framework 4.5 must be installed.
+Any supported version of Windows with .NET Framework 4.5.2 must be installed.
 
 ## Install process
 
@@ -53,7 +53,7 @@ The FICS Connector is installed and ready for configuration.
 
 **What Windows versions are supported?**
 
-Any supported version of Windows is compatible with the FICS Connector, provided that .NET Framework 4.5 is installed.
+Any supported version of Windows is compatible with the FICS Connector, provided that .NET Framework 4.5.2 is installed.
 
 **Where should I install the connector if OpCon is on a non-system drive?**
 
@@ -65,7 +65,7 @@ You may need to create the `FICS` directory under `ProgramData` if OpCon is inst
 
 ## Glossary
 
-**.NET Framework 4.5** — A Microsoft runtime framework required by the FICS Connector executables. Must be installed on the Windows machine before the connector can run.
+**.NET Framework 4.5.2** — A Microsoft runtime framework required by the FICS Connector executables. Must be installed on the Windows machine before the connector can run. An in-place update such as 4.6, 4.7, or 4.8 also satisfies this requirement.
 
 **ProgramData** — A Windows system folder (`C:\ProgramData`) used to store application configuration files that apply to all users on the machine. The FICS Connector INI files are stored here when OpCon is installed on the system drive.
 
