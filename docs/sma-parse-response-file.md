@@ -67,9 +67,9 @@ To capture the value of **Bank**, specify:
 
 Note the brackets following `table1`. This indicates that an array of values is returned. SMAParseResponseFile returns the value of the last member of the array.
 
-If the desired report is in a Document Collection, you can specify the Document Collection along with the `Name` property of the report to retrieve.
+If the desired report is in a Document Collection, you can retrieve a document by name or by numeric position.
 
-:::tip Example
+:::tip Example — retrieve by name
 
 Given a response file like the following:
 
@@ -89,13 +89,43 @@ Given a response file like the following:
 }
 ```
 
-To retrieve **Document 2**, specify:
+To retrieve **Document 2** by name, specify:
 
 ```
 -CaptureTag="DocumentCollection[Document 2]"
 ```
 
+:::
+
+:::tip Example — retrieve by numeric position
+
+To retrieve the first or second document in the collection by position, specify:
+
+```
+-CaptureTag="DocumentCollection[1]|DocumentBase64"
+```
+
+or
+
+```
+-CaptureTag="DocumentCollection[2]|DocumentBase64"
+```
+
+Append the target tag name (for example, `|DocumentBase64`) to extract a specific field from the retrieved document.
+
+:::
+
 If `-OutputFormat=CSV`, `-CaptureTag` names the container object of the array to save as a CSV file.
+
+### -CSVArrayName
+
+When `-OutputFormat=CSV` is specified and the array to convert is nested under a named property rather than directly under the container object, use `-CSVArrayName` to identify that property by name.
+
+:::tip Example
+
+```
+-CaptureTag="Data" -OutputFormat=CSV -CSVArrayName=DistributionDetailList
+```
 
 :::
 
@@ -150,11 +180,14 @@ Setting `-OutputFormat=DATA` and `-CaptureTag="LateNoticeSummaryReport|Document|
 
 :::
 
-:::note
-If `-OutputFormat=DATA` is specified, `-PropertyName` and `-TranslationFilename` cannot be used.
+The following values are supported:
 
-If `-OutputFormat=CSV`, a CSV file is created from the members of the array in the container object specified by `-CaptureTag`.
-:::
+| Value | Behavior |
+|---|---|
+| *(not specified)* | Default. Saves the tag value as a JSON construct suitable for use with `SMA_INJECT_FILE`. |
+| `DATA` | Saves the raw tag contents directly to `-TagValueFilename`. Cannot be used with `-PropertyName` or `-TranslationFilename`. |
+| `CSV` | Creates a CSV file from the members of the array in the container object specified by `-CaptureTag`. Use `-CSVArrayName` if the array is nested under a named property. |
+| `CSVFromBlock` | Creates a CSV file from a pre-formatted CSV block embedded in the response, identified by `-CaptureTag`. Use when the response contains a raw CSV data block rather than a JSON array. |
 
 ### -PropertyName
 

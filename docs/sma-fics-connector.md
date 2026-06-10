@@ -159,6 +159,82 @@ On the command line, specify:
 
 :::
 
+## Configuration settings
+
+SMAFICSConnector reads settings from `SMAFICSConnector.ini` at startup. The following is an example configuration file:
+
+```
+#####################################################################
+#
+#    This configuration file is used by
+#    SMAFICSConnector.
+#
+#####################################################################
+[General]
+
+[Execution Control Parameters]
+RequestTimeoutInMilliseconds=120000
+TreatNoDataAsError=true
+ExitValueForNoData=0
+
+[Resource Contention Parameters]
+RCRetryFrequencyInMilliseconds=60000
+RCMaximumAttempts=10
+
+[Web Service Connection Parameters]
+TokenURL=http://MortgageServicer.FICS/MortgageServicerService.svc/REST/
+BaseURL=http://MortgageServicer.FICS/MortgageServicerService.svc/REST/
+LoginUser=opcon
+LoginPassword=.\FICSPassword.dat
+LoginConnectionName=FICS MSS
+LoginTimeoutInMilliseconds=120000
+
+[OpCon Database Parameters]
+OpConDBUser=opconui
+OpConDBPassword=.\OpConPassword.dat
+OpConDBServer=SQLSERVER\SQLEXPRESS
+OpConDBName=OPCONXPS
+```
+
+### Execution Control Parameters
+
+| Setting | Default | What it does |
+|---|---|---|
+| `RequestTimeoutInMilliseconds` | `120000` | Defines the maximum number of milliseconds to wait for a web service request to complete before timing out. |
+| `TreatNoDataAsError` | `true` | Controls whether a response that contains no data is treated as an error condition. |
+| `ExitValueForNoData` | `0` | Defines the exit code returned when a no-data response is received. |
+
+### Resource Contention Parameters
+
+| Setting | Default | What it does |
+|---|---|---|
+| `RCRetryFrequencyInMilliseconds` | `60000` | Defines how many milliseconds to wait between retry attempts when a resource contention condition is detected. |
+| `RCMaximumAttempts` | `10` | Defines the maximum number of retry attempts before SMAFICSConnector stops retrying and exits with an error. |
+
+### Web Service Connection Parameters
+
+| Setting | Default | What it does |
+|---|---|---|
+| `TokenURL` | *(none)* | Defines the base URL for the FICS web service used during authentication. |
+| `BaseURL` | *(none)* | Defines the base URL for web service method calls. The `-Request` command-line parameter value is appended to this URL to form the complete endpoint. The correct value depends on the FICS module in use: Mortgage Servicer regular methods, Mortgage Servicer Specials, and Mortgage Accountant each use a different base URI. FICS can supply the correct URL for each module. |
+| `LoginUser` | *(none)* | Defines the FICS user account used to authenticate with the web service. |
+| `LoginPassword` | *(none)* | Defines the path to the encrypted password file for `LoginUser`. Create this file using SMACreatePasswordFile. |
+| `LoginConnectionName` | *(none)* | Defines the FICS connection name (database) to connect to. Must match the `LoginConnectionName` in `SMAFICSTemplateEditor.ini` if both tools are in use. |
+| `LoginTimeoutInMilliseconds` | `120000` | Defines the maximum number of milliseconds to wait for the login operation to complete before timing out. |
+
+### OpCon Database Parameters
+
+| Setting | Default | What it does |
+|---|---|---|
+| `OpConDBUser` | *(none)* | Defines the SQL user account used to connect to the OpCon database. |
+| `OpConDBPassword` | *(none)* | Defines the path to the encrypted password file for `OpConDBUser`. |
+| `OpConDBServer` | *(none)* | Defines the server name and instance of the SQL Server that hosts the OpCon database. |
+| `OpConDBName` | *(none)* | Defines the name of the OpCon database. |
+
+:::note
+If `OpConDBUser` and `OpConDBPassword` are left blank, Windows Authentication to the OpCon database is attempted. The OpCon job must specify a domain user in the **User Id** field on the job details tab.
+:::
+
 **Related topics:**
 
 - [FICS Connector overview](./overview.md)

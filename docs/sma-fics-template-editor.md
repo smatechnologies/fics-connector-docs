@@ -3,7 +3,7 @@ title: SMAFICSTemplateEditor
 description: "Reference and walkthrough for SMAFICSTemplateEditor, the Windows GUI tool for creating and editing FICS request template files."
 sidebar_label: SMAFICSTemplateEditor
 tags:
-  - Conceptual
+  - Procedural
   - Automation Engineer
   - Getting Started
 ---
@@ -141,17 +141,17 @@ SMAFICSTemplateEditor uses a configuration file to connect to your FICS environm
 LoginConnectionName=
 MethodDocumentationURL=
 SpecialsDocumentationURL=
-ExampleBaseURL=
+MethodExampleBaseURL=
 RequestTimeoutInMilliseconds=
 ```
 
-| Setting | What it does |
-|---|---|
-| `LoginConnectionName` | Defines the FICS connection name (database) to connect to. Must match the **LoginConnectionName** in `SMAFICSConnector.ini`. |
-| `MethodDocumentationURL` | Defines the URL that returns documentation for the available web service methods. FICS can supply this information. |
-| `SpecialsDocumentationURL` | Defines the URL that returns documentation for the available special web service methods. The **LoginConnectionName** is appended to this URL. FICS can supply this information. |
-| `ExampleBaseURL` | Defines the base URL that returns documentation for a specific web service method. FICS can supply this information. |
-| `RequestTimeoutInMilliseconds` | Defines the maximum number of milliseconds to wait for the method documentation call to complete. If the call does not complete within this time, the application displays an error message. |
+| Setting | Default | What it does |
+|---|---|---|
+| `LoginConnectionName` | *(none)* | Defines the FICS connection name (database) to connect to. Must match the `LoginConnectionName` in `SMAFICSConnector.ini`. |
+| `MethodDocumentationURL` | *(none)* | Defines the URL that returns documentation for the available web service methods. FICS can supply this information. |
+| `SpecialsDocumentationURL` | *(none)* | Defines the URL that returns documentation for the available special web service methods. The `LoginConnectionName` value is appended as a query parameter (`?connectionName=`). FICS can supply this information. |
+| `MethodExampleBaseURL` | *(none)* | Defines the base URL that returns documentation for a specific web service method. The method name is appended as a query parameter (`?methodName=`). FICS can supply this information. |
+| `RequestTimeoutInMilliseconds` | `60000` | Defines the maximum number of milliseconds to wait for the method documentation call to complete. If the call does not complete within this time, the application displays an error message. |
 
 **Related topics:**
 
@@ -170,7 +170,7 @@ A container holds multiple groups. A group holds multiple items. An item is a si
 
 **Where do I get the FICS URL values for the configuration file?**
 
-The `MethodDocumentationURL`, `SpecialsDocumentationURL`, and `ExampleBaseURL` values are provided by FICS. Contact your FICS representative to obtain these URLs.
+The `MethodDocumentationURL`, `SpecialsDocumentationURL`, and `MethodExampleBaseURL` values are provided by FICS. Contact your FICS representative to obtain these URLs.
 
 **Can I use OpCon properties in item values?**
 
@@ -187,3 +187,7 @@ Yes, but only for data type strings and dates. SMAFICSConnector substitutes the 
 **LoginConnectionName** — The identifier for the FICS database connection. Must match the value configured in `SMAFICSConnector.ini`.
 
 **MethodDocumentationURL** — The URL provided by FICS that returns documentation for all available web service methods.
+
+**MethodExampleBaseURL** — The base URL provided by FICS that returns documentation for a specific web service method. The method name is appended as a query parameter (`?methodName=`).
+
+**SpecialsDocumentationURL** — The base URL provided by FICS that returns documentation for special web service methods. The `LoginConnectionName` value is appended as a query parameter (`?connectionName=`).
