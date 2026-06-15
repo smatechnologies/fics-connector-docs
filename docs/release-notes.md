@@ -5,7 +5,7 @@ sidebar_label: Release notes
 tags:
   - Reference
   - Automation Engineer
-  - Getting Started
+  - Upgrade
 ---
 
 # FICS Connector release notes
