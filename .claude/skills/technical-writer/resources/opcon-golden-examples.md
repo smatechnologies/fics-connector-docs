@@ -98,7 +98,7 @@ Add a frequency to a job to specify when OpCon should build and run
 it. A job without a frequency will not be built into the daily
 schedule.
 
-:::note Prerequisite
+:::note[Prerequisite]
 The job must exist in the Job Master before a frequency can be
 added. See [Add a job to a schedule](add-job.md).
 :::
@@ -109,7 +109,7 @@ To add a frequency, complete the following steps:
 2. In the **Schedule** list, select the schedule.
 3. Select the job. The Job Master Details page is displayed.
 4. Select the **Frequency** tab.
-5. Select the **Add** button. The Add Frequency dialog is displayed.
+5. Select the **Add** button. The **Add Frequency** window is displayed.
 6. In the **Frequency Name** field, select an existing frequency from
    the list or enter a name to create a new one.
 7. Configure the frequency options.
@@ -126,6 +126,28 @@ when holiday calendar offsets are involved.
 - [How frequencies work](how-frequencies-work.md)
 - [Configure a holiday calendar](configure-holiday-calendar.md)
 - [Add a dependency to a job](add-job-dependency.md)
+```
+
+---
+
+## Procedural Pattern: Inline Note with Table
+
+When a step requires the user to choose between options and there is relevant context to share before they choose, place the note inside the step before the table. Indent both the note and the table at 4 spaces to keep them attached to the step in Docusaurus.
+
+```markdown
+2. Select the build option you need:
+
+    :::note
+    Both options create the job immediately. Choose based on whether
+    you want to reuse an existing job's configuration.
+    :::
+
+    | Option | Use when |
+    |---|---|
+    | **Copy a Job** | You want to reuse an existing job's frequencies, dependencies, and events |
+    | **Create a New Job** | You want to configure all settings manually |
+
+3. Select the **Save** button. The job is added to the Job Master.
 ```
 
 ---
