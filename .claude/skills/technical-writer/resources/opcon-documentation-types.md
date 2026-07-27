@@ -131,7 +131,7 @@ not built for that day.
 
 [1–2 sentences: what this procedure accomplishes and when to use it.]
 
-:::note Prerequisite
+:::note[Prerequisite]
 [What must be completed before starting.]
 :::
 
@@ -149,12 +149,12 @@ To [accomplish goal], complete the following steps:
 ### Example
 
 ```markdown
-# Add a job to a schedule
+# Add a Job to a Schedule
 
 Use this procedure to add a new automated job to an existing schedule.
 Repeat this procedure for each job that needs to be added.
 
-:::note Prerequisite
+:::note[Prerequisite]
 The schedule must exist before adding jobs. See [Create a Schedule].
 :::
 
@@ -176,6 +176,13 @@ To add a job, complete the following steps:
 ---
 
 ## 3. Reference Documentation
+
+> For plugin parameter descriptions specifically, consult
+> [opcon-parameter-descriptions.md](opcon-parameter-descriptions.md) which provides
+> patterns tailored to the OpCon UI rendering format.
+> For API endpoint documentation, do NOT use the reference template
+> below. Instead follow the strict per-endpoint templates in
+> [opcon-api-reference.md](opcon-api-reference.md).
 
 **Purpose:** Provide factual information that readers need to look up quickly. Organized for scanning, not reading start to finish.
 
@@ -217,6 +224,31 @@ To add a job, complete the following steps:
 | [Column 1] | [Column 2] | [Column 3] |
 |---|---|---|
 | Item | Description | Notes |
+```
+
+### Example
+
+```markdown
+# Standard Reports
+
+The Standard Reports section provides pre-configured reports related
+to jobs, schedules, agents, and thresholds. Reports are available in
+PDF and/or Excel formats.
+
+## Job Reports
+
+| Report | Description | Formats |
+|---|---|---|
+| Job Execution History | All job runs within a selected date range, including start time, end time, exit code, and agent. | PDF, Excel |
+| Failed Jobs Summary | All jobs that ended in a failed status within the selected period, with exit codes and job details. | PDF, Excel |
+| Job Dependency Map | All dependencies configured for a selected job or schedule. | PDF |
+
+## Schedule Reports
+
+| Report | Description | Formats |
+|---|---|---|
+| Schedule Build Summary | A record of all schedule builds for a selected date range, including build status and job counts. | PDF, Excel |
+| On-Hold Schedules | All schedules currently placed on hold, with the date and user who initiated the hold. | PDF, Excel |
 ```
 
 ---

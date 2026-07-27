@@ -199,6 +199,7 @@ Rules for using "right-click":
 |---|---|---|
 | Button | Label + "button" | Select the **Save** button. |
 | Checkbox | Label + "option"; select/clear | Select the **Allow Multi-Instance** option. |
+| Toggle | Label + "option"; for state-labeled toggles (e.g., "X is disabled" / "X is enabled"), use the full current-state label | Select the **Agent is disabled** option. |
 | Radio button | Label + "option" | Select the **Daily** option. |
 | Drop-down / list | Use "list", never "drop-down" | Select **Daily** from the list. |
 | Field | Exact label + "field" | In the **Job Name** field, enter the value. |
@@ -210,6 +211,9 @@ Rules for using "right-click":
 | Hamburger menu | Never say "hamburger"; use label or "menu button" | Select the **OpCon** button in the top left corner. |
 | Ellipsis button | Tooltip name + (...) | Select the **More actions** (...) button. |
 | Expander arrow | Label + appropriate element; never say "arrow" or "drop-down arrow" | Select the **Frequency** button and pick **Add** from the list. |
+| Overlay / popup panel | "window" | The **Add Job** window is displayed. |
+| Wizard step | Step name + "step" | The **Frequency** step is displayed. |
+| Full page / route destination | "page" | The **Job Master** page is displayed. |
 
 ### Banned UI Terminology
 
@@ -218,12 +222,16 @@ Never use these terms in documentation:
 - **drop-down** (any variation) — use "list" or "field"
 - **icon** — treat as a button if it performs an action
 - **checkbox** — use "option"
+- **toggle** — use "option" (include any state qualifier in the label, e.g., "is disabled" / "is enabled")
 - **radio button** — use "option"
 - **hamburger** — use label or "menu button"
 - **arrow** or **drop-down arrow** — use the label + appropriate element
 - **text box** — use "field" or "area"
 - **menu item** — refer to the item by name
 - **navigation** (as a noun for a menu) — use "menu"
+- **dialog** or **dialog box** — use "window"
+- **modal** — use "window"
+- **screen** (as a name for a UI element) — use "page", "step", "window", or "area" depending on what it is; "screen" is acceptable only when referring to the physical display (e.g., "on screen", "screen recording")
 
 ---
 
@@ -337,18 +345,24 @@ Mark optional steps explicitly:
 Use tables when users must choose between options within a step.
 
 - Introduce the table in the step text
-- Indent the table to align with the step it belongs to
+- Indent the table — and any note preceding the table — with **4 spaces** to keep them attached to the step in Docusaurus
+- Do **not** add a continuation sentence after the table — include result information in the step lead-in text or in the following step's result statement
 - Always explain the **consequences** of each option
 
 ```markdown
 2. Select one of the following options:
 
-   | Option | Description |
-   |---|---|
-   | Copy a Job | Creates a new job by copying an existing one. Frequencies, dependencies, and events are duplicated. |
-   | Create a New Job | Creates a new job from scratch. You will need to configure all settings manually. |
+    :::note
+    Both options create the job immediately. Choose based on whether
+    you want to reuse an existing job's configuration.
+    :::
 
-3. Select the **Save** button.
+    | Option | Use when |
+    |---|---|
+    | **Copy a Job** | You want to reuse an existing job's frequencies, dependencies, and events |
+    | **Create a New Job** | You want to configure all settings manually |
+
+3. Select the **Save** button. The job is added to the Job Master.
 ```
 
 ### Linking to Other Procedures
@@ -458,9 +472,9 @@ Use callouts sparingly and intentionally. Three tiers:
 | Caution | **CAUTION:** followed by the text | Risk of data, system, or configuration issues |
 | Warning | **WARNING:** in all caps, bold | High risk of serious damage or data loss |
 
-### In Docusaurus Markdown
+### In Markdown
 
-Use admonition syntax:
+Use Docusaurus admonition syntax:
 
 ```markdown
 :::note
@@ -472,7 +486,24 @@ Not completing a backup prior to these steps could result in data loss.
 :::
 ```
 
----
+### In Plugin Instructions (C# Inline)
+
+Use heading syntax indented under the relevant step:
+
+```csharp
+.AppendLine("3. Select **Add Machine**.")
+.AppendLine("   ###### Tip: The machine name must match the agent's configured name.")
+```
+
+### Placement
+
+Place a callout immediately before the content it relates to:
+
+- **Applies to a specific step decision** (e.g., which option to choose from a table) → indent it within that step, before the table, at 4 spaces
+- **Applies to the entire procedure** → place it before the opening "To [goal], complete the following steps:" sentence
+- **Applies to a post-procedure result** → place it after the final result statement
+
+Never append callouts at the end of a procedure unless they describe something that occurs after all steps are complete. A callout placed after the last step that informs a decision in an earlier step is in the wrong place.
 
 ## Images
 
@@ -512,7 +543,19 @@ Release notes are reference documentation. Customers scan them to find what chan
 
 ### Organizing Entries
 
-Group entries by **feature area**, not by role. Use headings that match the product's navigation so customers can find what's relevant to them.
+Group entries by **feature area**, not by role. Use headings that match the product's navigation so customers can find what's relevant to them:
+
+- Jobs
+- Schedules
+- Agents
+- Frequencies
+- Events
+- Thresholds
+- Notifications
+- Reports
+- System Configuration
+- API
+- Solution Manager
 
 Within each feature area, list entries in order of impact: new features first, then improvements, then bug fixes.
 
@@ -532,13 +575,125 @@ Rules:
 - Keep each entry to 1–2 sentences
 - Do not include Jira ticket numbers or internal references in customer-facing release notes
 
+### Template
+
+```markdown
+# OpCon [version]
+
+**Released:** [MM/DD/YYYY]
+
+[1–3 sentence summary of the release theme.]
+
+## New features
+
+### [Feature area]
+
+- **Added [feature].** [Why it matters or what the customer sees.]
+- **Added [feature].** [Description.]
+
+### [Feature area]
+
+- **Added [feature].** [Description.]
+
+## Improvements
+
+### [Feature area]
+
+- **Improved [what changed].** [What the customer experience is now.]
+- **Updated [what changed].** [Description.]
+
+## Bug fixes
+
+### [Feature area]
+
+- **Fixed an issue where [description of the problem].** [What happens now.]
+
+## Known issues
+
+- **[Description of the issue].** Workaround: [steps or explanation.]
+
+## Upgrade notes
+
+- [What Administrators must do before or after upgrading.]
+```
+
+### Example
+
+```markdown
+# OpCon 26.0
+
+**Released:** 03/15/2026
+
+OpCon 26.0 introduces enhanced frequency management, Solution Manager
+performance improvements, and several fixes to the job dependency workflow.
+
+## New features
+
+### Frequencies
+
+- **Added frequency preview.** You can now preview which dates a frequency
+  will generate before saving it, allowing you to verify holiday and
+  blackout calendar interactions before the schedule is built.
+
+### Schedules
+
+- **Added bulk schedule build.** You can now trigger a manual build for
+  multiple schedules at once from the Schedule list instead of building
+  each schedule individually.
+
+## Improvements
+
+### Agents
+
+- **Improved agent communication retry logic.** OpCon now retries failed
+  agent communication attempts up to three times before marking the agent
+  as unavailable, reducing false disconnection alerts.
+
+### Reports
+
+- **Updated the Job Execution History report to include threshold values.**
+  Each job now shows the threshold state at execution time, which simplifies
+  audit documentation for automated decision points.
+
+## Bug fixes
+
+### Jobs
+
+- **Fixed an issue where jobs with multi-instance configurations did not
+  display all instances on the Operations dashboard.** All instances now
+  appear correctly regardless of how the job was triggered.
+
+### Frequencies
+
+- **Fixed an issue where annual frequencies were not correctly applying
+  holiday calendar offsets.** Frequencies now apply calendar offsets as
+  configured.
+
+## Upgrade notes
+
+- Back up your database before upgrading. Refer to
+  [Backup and Restore](../admin-guide/backup-restore.md) for
+  instructions.
+- After upgrading, go to **Administration** and select
+  **Health Check** to verify all components are running correctly.
+```
+
 ### What NOT to Include
 
-- Internal ticket numbers
+- Internal ticket numbers (OC-1010, IDEA-1229, etc.)
 - Developer-facing details (class names, database schema changes, refactors)
 - Changes that are not visible to customers
-- Marketing language or superlatives
-- Future plans or roadmap items
+- Marketing language or superlatives ("exciting new feature," "game-changing update")
+- Future plans or roadmap items ("coming soon," "in a future release")
+
+### Tone
+
+Release notes serve all roles simultaneously. Write for the **least technical audience** while including enough detail for technical readers:
+
+- Use plain language — avoid jargon unless it's standard product terminology
+- Be specific about what changed — "Updated the Job Execution History report" not "Made report improvements"
+- Be honest about bug fixes — describe what was wrong and what's fixed
+- Keep it scannable — customers should find what matters to them in seconds
 
 ---
 
@@ -569,6 +724,7 @@ Before finalizing any documentation, verify:
 - [ ] Opens with "To [goal], complete the following steps:"
 - [ ] One action per step
 - [ ] Steps are numbered sequentially
+- [ ] Numbered lists have two or more steps — single-action procedures use prose instead of a numbered list
 - [ ] Ends with a result statement
 - [ ] No procedure exceeds ~10 steps without a section break
 - [ ] Tables in procedures explain consequences of each option
@@ -582,11 +738,12 @@ Before finalizing any documentation, verify:
 - [ ] No instance of "navigate to" (use "go to")
 - [ ] No instance of "drop-down" (use "list" or "field")
 - [ ] No instance of "icon" (treat as button)
-- [ ] No instance of "checkbox" or "radio button" (use "option")
+- [ ] No instance of "checkbox", "toggle", or "radio button" (use "option")
 - [ ] No instance of "hamburger"
 - [ ] No instance of "text box" (use "field" or "area")
 - [ ] No instance of "client" (use "customer")
 - [ ] No instance of "launch" (use "open" or "start")
+- [ ] No instance of "screen" used as a UI element name (use "page", "step", "window", or "area")
 
 ---
 
