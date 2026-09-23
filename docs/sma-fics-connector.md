@@ -71,6 +71,18 @@ If a report is returned, this is the path and file name under which to store the
 `-OutputFilename` has been deprecated and will be removed in a future version of SMAFICSConnector. Use `-FileTagFilename` or `-DocumentBase64TagFilename` instead, or use SMAParseResponseFile.
 :::
 
+### -CSVContainerTag
+
+Names the container object holding the array to convert to a CSV file. Required to produce a CSV.
+
+### -CSVOutputFilename
+
+Defines the path and file name of the CSV file to create.
+
+### -CSVIncludeHeaders
+
+When specified, writes a header row of column names as the first line of the CSV file. Include the parameter on its own; it takes no value.
+
 ### -FileDataFilename
 
 If this value is specified, the indicated file is read and its contents are inserted as the value of a `FileData` entry in the request file.
@@ -83,13 +95,21 @@ Defines the request specification appended to the `BaseURL` to select the desire
 
 Defines the file containing the formatted parameters required for the request.
 
-### -ResponceOutputFilename
+### -ResponseOutputFilename
 
-Saves the raw response XML to a file for downstream processing. Use this when tag values need to be extracted with SMAParseResponseFile.
+Saves the raw response to a file for downstream processing. Use this when tag values need to be extracted with SMAParseResponseFile.
 
-### -SystemData
+:::caution A saved response file can contain borrower data
+The response carries whatever the operation returned, which for these operations includes borrower names, loan identifiers and payment detail. The saved file is an ordinary part of the workflow, so it is not something to switch off — but store it where the job's own output would be protected, remove it once the downstream step has consumed it, and treat it as sensitive if you attach it to a support case.
+:::
+
+### -SystemDate
 
 Specifies the processing date when the current date should not be used. The format is `YYYY-MM-DD`.
+
+:::tip Use a property so every job in the schedule agrees
+Refer to [Reference information](./reference.md) for the recommended way to hold one timestamp across an entire processing day and pass it as `-SystemDate=[[FICS_Timestamp]]`.
+:::
 
 :::note
 If this parameter is not specified, the current datetime stamp is inserted into the request file.
@@ -97,7 +117,17 @@ If this parameter is not specified, the current datetime stamp is inserted into 
 
 ### -VerboseLogging
 
-When specified, dumps the request and raw response to the log file.
+When specified, writes the request URI and the full request body to the log file.
+
+### -DumpResponseContent
+
+When specified, writes the raw response body to the log file under a `Raw Response Content:` heading.
+
+This parameter also changes how the response is collected. With `-DumpResponseContent`, the connector waits for the complete response before continuing. Without it, the response is collected asynchronously and only the number of bytes returned is logged. Use it together with `-VerboseLogging` when you need to see both sides of an exchange.
+
+:::caution This output can contain borrower data and a credential
+The request carries the FICS authorization token, and the response carries whatever the operation returned, which for these operations includes borrower names, loan identifiers and payment detail. Turn verbose logging off once you have finished troubleshooting, and treat the log file and any saved response file as sensitive when storing them or attaching them to a support case.
+:::
 
 ---
 
@@ -201,8 +231,8 @@ OpConDBName=OPCONXPS
 | Setting | Default | What it does |
 |---|---|---|
 | `RequestTimeoutInMilliseconds` | `120000` | Defines the maximum number of milliseconds to wait for a web service request to complete before timing out. |
-| `TreatNoDataAsError` | `true` | Controls whether a response that contains no data is treated as an error condition. |
-| `ExitValueForNoData` | `0` | Defines the exit code returned when a no-data response is received. |
+| `TreatNoDataAsError` | `true` | Controls whether a response that contains no data is treated as an error condition. When `true`, a no-data response exits `1` and `ExitValueForNoData` is ignored. |
+| `ExitValueForNoData` | `0` | Defines the exit code returned when a no-data response is received. **Consulted only when `TreatNoDataAsError` is `false`.** |
 
 ### Resource Contention Parameters
 
@@ -235,6 +265,38 @@ OpConDBName=OPCONXPS
 If `OpConDBUser` and `OpConDBPassword` are left blank, Windows Authentication to the OpCon database is attempted. The OpCon job must specify a domain user in the **User Id** field on the job details tab.
 :::
 
+## Exit codes
+
+| Code | Meaning |
+|---|---|
+| `0` | The request completed and the response contained data. |
+| `1` | The request failed, **or** the response contained no data and `TreatNoDataAsError` is `true`. |
+| `ExitValueForNoData` | The response contained no data and `TreatNoDataAsError` is `false`. Defaults to `0`. |
+
+Set the **Failure Criteria** for the OpCon job to **NE** (Not Equal) to `0` to fail the job on an error.
+
+:::note An empty result fails the job at the shipped defaults
+The sample configuration file sets `TreatNoDataAsError=true` and `ExitValueForNoData=0`. In that combination a response with no data exits `1`, and the `ExitValueForNoData` value is never used. To let an empty result pass, set `TreatNoDataAsError=false` and give `ExitValueForNoData` the code you want.
+:::
+
+## FICS API call quota
+
+FICS returns the number of web service calls remaining on the account in an `ApiCallsLeft` response header. SMAFICSConnector records the value in its log on every run:
+
+```
+ApiCallsLeft = 4821
+```
+
+:::caution The job is failed deliberately when the quota reaches zero
+When the remaining count reaches `0`, SMAFICSConnector stops and writes the following to the log before failing the job:
+
+```
+Job failed because ApiCallsLeft went to 0.
+```
+
+This is not an OpCon or connector problem and it is not resolved by rerunning. The limit is set on the FICS side, so raising it is a conversation with FICS. The logged value on earlier runs is the warning you have: watch it if your schedule makes many calls in a day.
+:::
+
 **Related topics:**
 
 - [FICS Connector overview](./overview.md)
@@ -256,9 +318,13 @@ Both override `-OutputFilename` for their respective tag types. Use `-FileTagFil
 
 Yes. Use the `[[Property Name]]` token syntax in your request file. OpCon substitutes the property value before SMAFICSConnector sends the request. Only User Defined Properties and Schedule Instance properties are supported.
 
-**What does `-VerboseLogging` write to the log?**
+**What is the difference between `-VerboseLogging` and `-DumpResponseContent`?**
 
-With verbose logging enabled, SMAFICSConnector writes the full request body and the raw response XML to the connector log file. Use this for troubleshooting failed or unexpected responses.
+`-VerboseLogging` writes the request URI and the request body. `-DumpResponseContent` writes the raw response body, and also makes the connector wait for the complete response instead of collecting it asynchronously. Use both together to see a full exchange. Both write data you should treat as sensitive.
+
+**Why did my job fail with `Job failed because ApiCallsLeft went to 0`?**
+
+The FICS account has used its allocation of web service calls. SMAFICSConnector reports the remaining count in its log on every run and fails the job when it reaches zero. Rerunning does not help; the limit is raised on the FICS side.
 
 ## Glossary
 
@@ -271,3 +337,5 @@ With verbose logging enabled, SMAFICSConnector writes the full request body and 
 **SMA_INJECT_FILE** — A directive placed in a request file that causes SMAFICSConnector to read a second file and insert its contents inline at that position in the request.
 
 **DocumentCollection** — A named array in a FICS response that contains one or more documents. Use `-DocumentCollectionName` to specify a non-default collection name.
+
+**`ApiCallsLeft`** — A FICS response header giving the number of web service calls remaining on the account. SMAFICSConnector logs it on every run and fails the job when it reaches zero.

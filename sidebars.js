@@ -14,6 +14,8 @@ module.exports = {
     'installation',
     'sma-fics-connector',
     'sma-parse-response-file',
+    'sma-build-list-from-json-array',
+    'sma-create-csv-from-check-register',
     'sma-fics-template-editor',
     'sma-create-password-file',
     'reference',

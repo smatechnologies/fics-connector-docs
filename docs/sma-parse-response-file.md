@@ -201,6 +201,14 @@ Defines the file containing the FICS web service response. This file is typicall
 
 Defines the name of the file in which to save the captured tag value.
 
+### -VerboseLogging
+
+When specified, writes additional detail to the log file, including the response file that was read and the tag hierarchy that was walked. Use it when a parse returns nothing or returns an unexpected value.
+
+:::caution This output can contain borrower data
+The detail written includes response content, which for these operations includes borrower names, loan identifiers and payment detail. Turn it off once you have finished troubleshooting and treat the log file as sensitive.
+:::
+
 ### -TranslationFilename
 
 Optional. Allows you to remap tag names in the output.
