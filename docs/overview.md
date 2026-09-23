@@ -27,6 +27,8 @@ The FICS Connector toolkit includes the following applications:
 | SMAFICSConnector | Command-line utility | Connects to the FICS API and submits request files to the appropriate web service |
 | SMAFICSTemplateEditor | Windows GUI application | Creates and edits FICS request template files while maintaining data types and JSON format integrity |
 | SMAParseResponseFile | Command-line utility | Parses saved FICS web service response files to extract tag values for downstream processing |
+| SMABuildListFromJSONArray | Command-line utility | Builds a comma-terminated list file from one element of every entry in a JSON array in a saved response |
+| SMACreateCSVFromCheckRegister | Command-line utility | Builds a CSV file with chosen columns from an array in a saved response, such as a check register |
 | SMACreatePasswordFile | Command-line utility | Encrypts passwords for secure storage in configuration files |
 
 **Related topics:**
@@ -35,6 +37,8 @@ The FICS Connector toolkit includes the following applications:
 - [SMAFICSConnector](./sma-fics-connector.md)
 - [SMAFICSTemplateEditor](./sma-fics-template-editor.md)
 - [SMAParseResponseFile](./sma-parse-response-file.md)
+- [SMABuildListFromJSONArray](./sma-build-list-from-json-array.md)
+- [SMACreateCSVFromCheckRegister](./sma-create-csv-from-check-register.md)
 - [SMACreatePasswordFile](./sma-create-password-file.md)
 
 ## FAQs

@@ -1,8 +1,13 @@
 ---
 title: FICS Connector
+description: "The FICS Connector toolkit, which enables OpCon to automate FICS Mortgage Servicer and Mortgage Accountant operations through FICS web services."
 slug: '/'
 hide_table_of_contents: true
 displayed_sidebar: null
+tags:
+  - Conceptual
+  - Automation Engineer
+  - Getting Started
 ---
 
 # FICS Connector
@@ -41,6 +46,8 @@ The FICS Connector enables OpCon to automate FICS Mortgage Servicer and Mortgage
 - [SMAFICSConnector](./sma-fics-connector.md)
 - [SMAFICSTemplateEditor](./sma-fics-template-editor.md)
 - [SMAParseResponseFile](./sma-parse-response-file.md)
+- [SMABuildListFromJSONArray](./sma-build-list-from-json-array.md)
+- [SMACreateCSVFromCheckRegister](./sma-create-csv-from-check-register.md)
 - [SMACreatePasswordFile](./sma-create-password-file.md)
 
 </div>

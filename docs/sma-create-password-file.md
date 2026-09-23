@@ -38,6 +38,18 @@ The special characters `` < > | & " ^ ' % `` should be avoided. These characters
 
 :::
 
+:::caution The utility displays the password you give it
+SMACreatePasswordFile echoes each argument it receives, including `-password`, so the password appears on screen in clear text. The password is also part of the command line, which makes it visible to anything that can read the process list or a command history.
+
+Run the utility in a private session rather than a shared or recorded one, clear the command history afterwards, and do not run it as a scheduled job whose output is retained.
+:::
+
+:::caution An encrypted password file still needs protecting
+The password is encrypted with a key that is built into the utility and is the same on every installation, and that utility is included in the same distribution as the file it protects. Anyone who has both the file and the product can recover the password.
+
+The encryption keeps the password out of a readable configuration file, which is worth having. It does not make the file safe to circulate. Restrict its permissions to the account that runs the job, keep it out of source control, and protect it wherever it is backed up.
+:::
+
 **Related topics:**
 
 - [FICS Connector overview](./overview.md)
@@ -50,6 +62,10 @@ The special characters `` < > | & " ^ ' % `` should be avoided. These characters
 
 Plain-text passwords in configuration files are a security risk. SMACreatePasswordFile encrypts the password so that the configuration file references a file path rather than the password itself.
 
+**Does the encrypted file protect the password completely?**
+
+No. The encryption key is built into the utility and is identical on every installation, and the utility ships alongside the file. It keeps the password out of a readable configuration file, which is the point, but the file still needs treating as a secret — restricted permissions, out of source control, and protected in backups.
+
 **Where do I reference the encrypted password file?**
 
 Specify the path to the encrypted file in the `OpConDBPassword` field of the relevant FICS Connector configuration file (for example, `SMAParseResponseFile.ini`).
@@ -60,6 +76,6 @@ The characters `` < > | & " ^ ' % `` cannot be properly encrypted. Avoid using t
 
 ## Glossary
 
-**Encrypted password file** — A file created by SMACreatePasswordFile that stores a password in an encrypted format. The file path is referenced in FICS Connector configuration files in place of a plain-text password.
+**Encrypted password file** — A file created by SMACreatePasswordFile that stores a password in an encrypted format. The file path is referenced in FICS Connector configuration files in place of a plain-text password. The encryption key is the same on every installation, so the file needs protecting like the credential it holds.
 
 **`-file`** — The command-line option that specifies the name and path of the output file where the encrypted password is stored.
