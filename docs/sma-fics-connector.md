@@ -39,7 +39,7 @@ Defines the configuration file to use if `SMAFICSConnector.ini` is not the desir
 
 If a document collection is to be processed, the default collection name is `DocumentCollection`. This parameter allows you to change the collection name to search.
 
-### -Document1 ... -Document99
+### -Document1 ... -Document100
 
 Sometimes documents are returned in collections (or arrays). If so, the appropriate document can be saved by specifying the desired path and file name.
 
@@ -57,19 +57,25 @@ If a document specifier is not included on the command line, the document is not
 
 ### -DocumentBase64TagFilename
 
-If a `DocumentBase64` tag is found in the response, the contents are stored in this file. This argument overrides `-OutputFilename` for `DocumentBase64` tags. If the keyword `SUPPRESS` is used instead of a file path, no output file is created for this tag.
+If a `DocumentBase64` tag is found in the response, the contents are stored in this file. This argument is the only way to save the contents of a `DocumentBase64` tag: if it is omitted, nothing is saved for that tag. If the keyword `SUPPRESS` is used instead of a file path, no output file is created for this tag.
 
 ### -FileTagFilename
 
-If a `File` tag is found in the response, the contents are stored in this file. This argument overrides `-OutputFilename` for `File` tags. If the keyword `SUPPRESS` is used instead of a file path, no output file is created for this tag.
+If a `File` tag is found in the response, the contents are stored in this file. This argument is the only way to save the contents of a `File` tag: if it is omitted, nothing is saved for that tag. If the keyword `SUPPRESS` is used instead of a file path, no output file is created for this tag.
 
 ### -OutputFilename
 
-If a report is returned, this is the path and file name under which to store the report. If either a `File` tag or a `DocumentBase64` tag is found, the contents are stored in this file. This can be overridden by `-FileTagFilename` or `-DocumentBase64TagFilename`. It is possible to have both a `File` tag and a `DocumentBase64` tag in the same response.
+:::caution
 
-:::note
-`-OutputFilename` has been deprecated and will be removed in a future version of SMAFICSConnector. Use `-FileTagFilename` or `-DocumentBase64TagFilename` instead, or use SMAParseResponseFile.
+`-OutputFilename` has no effect and is retained only so that existing job definitions do not
+fail. It does not save a report, a `File` tag or a `DocumentBase64` tag. Use
+`-FileTagFilename` to save the contents of a `File` tag and `-DocumentBase64TagFilename` to
+save the contents of a `DocumentBase64` tag. A response can contain both tag types, in which
+case specify both arguments. SMAParseResponseFile is the other option.
+
 :::
+
+`-OutputFilename` is deprecated and will be removed in a future version of SMAFICSConnector.
 
 ### -CSVContainerTag
 
@@ -105,7 +111,16 @@ The response carries whatever the operation returned, which for these operations
 
 ### -SystemDate
 
-Specifies the processing date when the current date should not be used. The format is `YYYY-MM-DD`.
+Specifies the processing date when the current date should not be used. Use the format `YYYY-MM-DD`.
+
+:::caution
+
+SMAFICSConnector converts this value using the regional settings of the server it runs on,
+not a fixed layout, so other formats are accepted and the job does not fail on them. A date
+such as `03/04/2026` is read as 4 March or 3 April depending on the server's locale. Always
+supply `YYYY-MM-DD`, which is read the same way under every locale.
+
+:::
 
 :::tip Use a property so every job in the schedule agrees
 Refer to [Reference information](./reference.md) for the recommended way to hold one timestamp across an entire processing day and pass it as `-SystemDate=[[FICS_Timestamp]]`.
@@ -238,8 +253,8 @@ OpConDBName=OPCONXPS
 
 | Setting | Default | What it does |
 |---|---|---|
-| `RCRetryFrequencyInMilliseconds` | `60000` | Defines how many milliseconds to wait between retry attempts when a resource contention condition is detected. |
-| `RCMaximumAttempts` | `10` | Defines the maximum number of retry attempts before SMAFICSConnector stops retrying and exits with an error. |
+| `RCRetryFrequencyInMilliseconds` | `60000` | Defines how many milliseconds to wait between attempts to obtain the authorization token. |
+| `RCMaximumAttempts` | `10` | Defines the maximum number of attempts to obtain the authorization token before SMAFICSConnector exits with `ERROR: Unable to get authorization token in <n> attempts.` |
 
 ### Web Service Connection Parameters
 
@@ -248,7 +263,7 @@ OpConDBName=OPCONXPS
 | `TokenURL` | *(none)* | Defines the base URL for the FICS web service used during authentication. |
 | `BaseURL` | *(none)* | Defines the base URL for web service method calls. The `-Request` command-line parameter value is appended to this URL to form the complete endpoint. The correct value depends on the FICS module in use: Mortgage Servicer regular methods, Mortgage Servicer Specials, and Mortgage Accountant each use a different base URI. FICS can supply the correct URL for each module. |
 | `LoginUser` | *(none)* | Defines the FICS user account used to authenticate with the web service. |
-| `LoginPassword` | *(none)* | Defines the path to the encrypted password file for `LoginUser`. Create this file using SMACreatePasswordFile. |
+| `LoginPassword` | *(none)* | Defines the path to the encrypted password file for `LoginUser`. Create this file using SMACreatePasswordFile. See the caution below on mistyped paths. |
 | `LoginConnectionName` | *(none)* | Defines the FICS connection name (database) to connect to. Must match the `LoginConnectionName` in `SMAFICSTemplateEditor.ini` if both tools are in use. |
 | `LoginTimeoutInMilliseconds` | `120000` | Defines the maximum number of milliseconds to wait for the login operation to complete before timing out. |
 
@@ -257,11 +272,21 @@ OpConDBName=OPCONXPS
 | Setting | Default | What it does |
 |---|---|---|
 | `OpConDBUser` | *(none)* | Defines the SQL user account used to connect to the OpCon database. |
-| `OpConDBPassword` | *(none)* | Defines the path to the encrypted password file for `OpConDBUser`. |
+| `OpConDBPassword` | *(none)* | Defines the path to the encrypted password file for `OpConDBUser`. See the caution below on mistyped paths. |
 | `OpConDBServer` | *(none)* | Defines the server name and instance of the SQL Server that hosts the OpCon database. |
 | `OpConDBName` | *(none)* | Defines the name of the OpCon database. |
 
 :::note
+:::caution
+
+SMAFICSConnector decrypts `LoginPassword` and `OpConDBPassword` only when a file exists at
+the path given. If no file exists there, the value itself is used as the password. A
+mistyped or moved password file therefore produces an authentication failure that looks
+like a wrong password rather than a missing file. Check that the path exists before
+treating the problem as a credential problem.
+
+:::
+
 If `OpConDBUser` and `OpConDBPassword` are left blank, Windows Authentication to the OpCon database is attempted. The OpCon job must specify a domain user in the **User Id** field on the job details tab.
 :::
 
@@ -312,7 +337,7 @@ Use the `-ConfigFile` parameter to specify the path to an alternative configurat
 
 **What is the difference between `-FileTagFilename` and `-DocumentBase64TagFilename`?**
 
-Both override `-OutputFilename` for their respective tag types. Use `-FileTagFilename` when the response contains a `File` tag, and `-DocumentBase64TagFilename` when it contains a `DocumentBase64` tag. A response can contain both tag types simultaneously.
+Each one is the only way to save its own tag type, since `-OutputFilename` has no effect. Use `-FileTagFilename` when the response contains a `File` tag, and `-DocumentBase64TagFilename` when it contains a `DocumentBase64` tag. A response can contain both tag types simultaneously, in which case specify both arguments.
 
 **Can I pass OpCon schedule dates or properties as part of the request?**
 

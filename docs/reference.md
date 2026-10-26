@@ -91,7 +91,9 @@ FICS request parameters can change between Mortgage Servicer releases. Storing r
 
 **Can I use OpCon properties in request files?**
 
-Yes. Use the `[[Property Name]]` token syntax in request files. OpCon substitutes the property value before SMAFICSConnector sends the request. Only User Defined Properties and Schedule Instance properties are supported.
+Yes. Use the `[[Property Name]]` token syntax in request files. SMAFICSConnector resolves these tokens itself: it opens the OpCon database and reads each property value before sending the request. Only User Defined Properties and Schedule Instance properties are supported.
+
+Because the connector reads the properties directly, the `OpCon Database Parameters` section of the INI file must be configured on every run that uses a token, and the job fails if a token names a property that has no value.
 
 **What is the recommended approach for timestamp coordination across multiple FICS jobs?**
 
